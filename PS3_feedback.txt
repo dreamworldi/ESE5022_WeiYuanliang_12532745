@@ -1,0 +1,32 @@
+批改人：胡蓓慧
+学生：韦圆良（12532745）
+得分：（30/50）（50-3-3-1-2-0.5-0.5-1-1-5-1.5-0.5-1=30）
+扣分点：
+第1题，3个子题都没有进行数据清洗（-1*3=-3分）和单位转换（-1*3=-3分），绘图结果错误。解释：摩尔分数需要乘以1e9获得ppb，1e20对应空值。
+1.1 colorbar和绘图内容重叠（-1分）
+1.2和1.3都没有自己的描述（”Describe your results“），-2分
+2.2 ylim设置不合理（-0.5分），'El Niño阈值'和'La Niña阈值' 在legend中没有正确显示（-0.5分），没有以示例图所展示的那样，以柱状图显示Montly Anomaly（-1分）
+3.1 没有使用真实的数据（-1分）
+3.2 5个图都没有显示出来（-1*5=-5分）；图1 数据维度不匹配，在图2，图5中同样有这样的问题（-0.5*3=-1.5分）。图4，对数据进行展平及随机采样会破坏空间对应，概念错误（-0.5分）；
+
+报错结果显示，rainf_trend为三维数据：(1, 224, 464) ，其中1可能代表时间维度，而ax.pcolormesh()需要二维数据，因此报错，或许可以用以下代码进行改进：
+“
+"""绘制空间分布图"""
+    # 使用降水趋势数据
+    rainf_trend = dataset.variables['Trend_Rainf_f'][:]  # 形状: (1, 224, 464)
+    
+    # 获取二维数据
+    if rainf_trend.ndim == 3:
+        rainf_trend_2d = rainf_trend[0, :,  # 取第一个时间点
+    else:
+        rainf_trend_2d = rainf_trend
+    
+    fig = plt.figure(figsize=(12, 8))
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    
+    # 绘制填色图
+    im = ax.pcolormesh(lon, lat, rainf_trend_2d,  # 使用一维经纬度即可
+                      cmap='BrBG', vmin=-5, vmax=5,
+                      transform=ccrs.PlateCarree(), shading='auto')”
+
+报告没有正确的格式，之前提醒过还没有改，-1分。
